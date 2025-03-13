@@ -1,0 +1,212 @@
+# Set up Sonarr and Radarr with the same configuration
+# This is a production-ready configuration file that can be used to set up Sonarr and Radarr
+
+# Note: Aliases go at the top of the file;
+# they are used to define common configurations that can be reused throughout the file
+
+alias_naming_config:
+  - &naming_config
+    renameEpisodes: true
+    replaceIllegalCharacters: true
+    multiEpisodeStyle: 5
+    standardEpisodeFormat:
+      "{Series TitleYear} - S{season:00}E{episode:00} - {Episode
+      CleanTitle} [{Preferred Words }{Quality Full}]{[MediaInfo VideoDynamicRangeType]}{[Mediainfo
+      AudioCodec}{ Mediainfo AudioChannels]}{MediaInfo AudioLanguages}{[MediaInfo VideoCodec]}{-Release
+      Group}"
+    dailyEpisodeFormat:
+      "{Series TitleYear} - {Air-Date} - {Episode CleanTitle} [{Preferred
+      Words }{Quality Full}]{[MediaInfo VideoDynamicRangeType]}{[Mediainfo AudioCodec}{
+      Mediainfo AudioChannels]}{MediaInfo AudioLanguages}{[MediaInfo VideoCodec]}{-Release
+      Group}"
+    animeEpisodeFormat:
+      "{Series TitleYear} - S{season:00}E{episode:00} - {absolute:000}
+      - {Episode CleanTitle} [{Preferred Words }{Quality Full}]{[MediaInfo VideoDynamicRangeType]}[{MediaInfo
+      VideoBitDepth}bit]{[MediaInfo VideoCodec]}[{Mediainfo AudioCodec} { Mediainfo AudioChannels}]{MediaInfo
+      AudioLanguages}{-Release Group}"
+    seriesFolderFormat: "{Series TitleYear} [imdb-{ImdbId}]"
+    seasonFolderFormat: Season {season:00}
+    specialsFolderFormat: Specials
+    includeSeriesTitle: false
+    includeEpisodeTitle: false
+    includeQuality: false
+    replaceSpaces: true
+    separator: " - "
+    numberStyle: S{season:00}E{episode:00}
+
+alias_media_config:
+  - &media_config
+    autoUnmonitorPreviouslyDownloadedEpisodes: false
+    recycleBin: ""
+    recycleBinCleanupDays: 7
+    downloadPropersAndRepacks: doNotUpgrade
+    createEmptySeriesFolders: false
+    deleteEmptyFolders: false
+    fileDate: none
+    rescanAfterRefresh: always
+    setPermissionsLinux: false
+    chmodFolder: "755"
+    chownGroup: ""
+    episodeTitleRequired: always
+    skipFreeSpaceCheckWhenImporting: true
+    minimumFreeSpaceWhenImporting: 100
+    copyUsingHardlinks: true
+    importExtraFiles: true
+    extraFileExtensions: srt
+    enableMediaInfo: true
+
+alias_rootfolder_config:
+  - &rootfolder_downloads
+    name: Downloads
+    path: /Cloud/Downloads
+    defaultTags: []
+    defaultQualityProfileId: 1
+    defaultMetadataProfileId: 1
+
+  - &rootfolder_anime_series
+    name: Anime Series
+    path: /Cloud/Anime/Series
+    defaultTags: []
+    defaultQualityProfileId: 1
+    defaultMetadataProfileId: 1
+
+  - &rootfolder_anime_movies
+    name: Anime Movies
+    path: /Cloud/Anime/Movies
+    defaultTags: []
+    defaultQualityProfileId: 1
+    defaultMetadataProfileId: 1
+
+  - &rootfolder_tv_series
+    name: TV Series
+    path: /Cloud/TV/Series
+    defaultTags: []
+    defaultQualityProfileId: 1
+    defaultMetadataProfileId: 1
+
+  - &rootfolder_tv_movies
+    name: TV Movies
+    path: /Cloud/TV/Movies
+    defaultTags: []
+    defaultQualityProfileId: 1
+    defaultMetadataProfileId: 1
+
+alias_downloadclient_config:
+  - &downloadclient_config_qbittorrent
+    name: qBittorrent
+    enable: true
+    protocol: torrent
+    priority: 2
+    removeCompletedDownloads: true
+    removeFailedDownloads: true
+    fields:
+      - name: host
+        value: qbittorrent
+      - name: port
+        value: 8080
+      - name: username
+        value: somerandom2
+      - name: password
+        value: somerandom2
+      - name: tvCategory
+        value: tv
+      - name: recentTvPriority
+        value: 0
+      - name: olderTvPriority
+        value: 0
+      - name: initialState
+        value: 0
+      - name: sequentialOrder
+        value: false
+      - name: firstAndLast
+        value: false
+    implementation: QBittorrent
+    configContract: QBittorrentSettings
+
+sonarr:
+  server:
+    address: sonarr
+    port: 8989
+    apiKey: somerandom
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+      firstDayOfWeek: 1
+      timeFormat: HH:mm
+    naming:
+      <<: *naming_config
+    mediamanagement:
+      <<: *media_config
+  rootfolder:
+    - *rootfolder_downloads
+    - *rootfolder_anime_series
+    - *rootfolder_anime_movies
+    - *rootfolder_tv_series
+    - *rootfolder_tv_movies
+  downloadclient:
+    - *downloadclient_config_qbittorrent
+
+radarr:
+  server:
+    address: radarr
+    port: 7878
+    apiKey: somerandom
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+      firstDayOfWeek: 1
+      timeFormat: HH:mm
+    naming:
+      <<: *naming_config
+    mediamanagement:
+      <<: *media_config
+  rootfolder:
+    - *rootfolder_downloads
+    - *rootfolder_anime_series
+    - *rootfolder_anime_movies
+    - *rootfolder_tv_series
+    - *rootfolder_tv_movies
+  downloadclient:
+    - *downloadclient_config_qbittorrent
+
+lidarr:
+  server:
+    address: lidarr
+    port: 8686
+    apiKey: somerandom
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+      firstDayOfWeek: 1
+      timeFormat: HH:mm
+  rootfolder:
+    - name: Music
+      path: /data/music
+      defaultTags: []
+      defaultQualityProfileId: 1
+      defaultMetadataProfileId: 1
+  downloadclient:
+    - *downloadclient_config_qbittorrent
+
+readarr:
+  server:
+    address: readarr
+    port: 8787
+    apiKey: somerandom
+  config:
+    host:
+      analyticsEnabled: false
+    ui:
+      firstDayOfWeek: 1
+      timeFormat: HH:mm
+  rootfolder:
+    - name: Books
+      path: /data/books
+      defaultTags: []
+      defaultQualityProfileId: 1
+      defaultMetadataProfileId: 1
+  downloadclient:
+    - *downloadclient_config_qbittorrent

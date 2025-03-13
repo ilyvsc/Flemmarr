@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "flemmarr"
+version = "0.1.0"
+description = "Flemmarr makes it easy to automate configuration for your -arr apps"
+authors = ["Flemmarr"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+urllib3 = "^2.3.0"
+requests = "^2.32.3"
+pyyaml = "^6.0.2"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.8.6"
+
+[tool.ruff]
+line-length = 90
+respect-gitignore = true
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "C", # flake8-comprehensions
+    "E", # pycodestyle errors
+    "F", # pyflakes
+    "I", # isort
+    "W", # pycodestyle warnings
+]
+ignore = [
+    "COM812", # Missing trailing comma
+    "C901",   # Function is too complex
+    "C416",   # Unnecessary list comprehension
+    "E266",   # Too many leading # for block comment
+    "E501",   # Line too long (X > 79 characters)
+    "F401",   # Module imported but unused
+    "F403",   # 'from module import *' used; unable to detect undefined names
+    "F405",   # Name may be undefined, or defined from star imports: module
+    "ISC001", # Import aliases should not be a single letter
+    "E712",   # Comparison to False should be 'if cond is False:' or 'if not cond:'
+]
+fixable = ["I", "RUF100"]
+unfixable = []
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E402", "F401", "F403", "F811"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+skip-magic-trailing-comma = false
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

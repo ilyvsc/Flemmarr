@@ -1,93 +1,105 @@
-version: "3"
 services:
+  flemmarr:
+    container_name: flemmarr
+    image: pierremesure/flemmarr
+    volumes:
+      - ./config/flemmarr:/config/flemmarr/
+    depends_on:
+      - transmission
+      - sonarr
+      - radarr
+      - lidarr
+      - readarr
+      - prowlarr
+    restart: unless-stopped
+
   sonarr:
     container_name: sonarr
-    image: lscr.io/linuxserver/sonarr:latest
+    image: linuxserver/sonarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK_SET: 022
+      TZ: Europe/Stockholm
+    volumes:
+      - ~/config/sonarr:/config/sonarr/
+      - ~/data:/data
     ports:
       - 8989:8989
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK_SET=022
-      - TZ=Europe/Stockholm
-    volumes:
-      - "~/config/sonarr:/config"
-      - "~/data:/data"
     restart: unless-stopped
+
   radarr:
     container_name: radarr
-    image: lscr.io/linuxserver/radarr:latest
+    image: linuxserver/radarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK_SET: 022
+      TZ: Europe/Stockholm
+    volumes:
+      - ~/config/radarr:/config/radarr/
+      - ~/data:/data
     ports:
       - 7878:7878
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK_SET=022
-      - TZ=Europe/Stockholm
-    volumes:
-      - "~/config/radarr:/config"
-      - "~/data:/data"
     restart: unless-stopped
+
   lidarr:
     container_name: lidarr
-    image: lscr.io/linuxserver/lidarr:latest
+    image: linuxserver/lidarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK_SET: 022
+      TZ: Europe/Stockholm
+    volumes:
+      - ~/config/lidarr:/config/lidarr/
+      - ~/data:/data
     ports:
       - 8686:8686
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK_SET=022
-      - TZ=Europe/Stockholm
-    volumes:
-      - "~/config/lidarr:/config"
-      - "~/data:/data"
     restart: unless-stopped
+
   readarr:
     container_name: readarr
-    image: lscr.io/linuxserver/readarr:develop
+    image: linuxserver/readarr
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK_SET: 022
+      TZ: Europe/Stockholm
+    volumes:
+      - ~/config/readarr:/config/readarr/
+      - ~/data:/data
     ports:
       - 8787:8787
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK_SET=022
-      - TZ=Europe/Stockholm
-    volumes:
-      - "~/config/readarr:/config"
-      - "~/data:/data"
     restart: unless-stopped
+
   prowlarr:
     container_name: prowlarr
-    image: lscr.io/linuxserver/prowlarr:develop
+    image: linuxserver/prowlarr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK_SET=022
-      - TZ=Europe/Stockholm
+      PUID: 1000
+      PGID: 1000
+      UMASK_SET: 022
+      TZ: Europe/Stockholm
     volumes:
-      - "~/config/prowlarr:/config"
+      - ~/config/prowlarr:/config/prowlarr/
     ports:
       - 9696:9696
     restart: unless-stopped
+
   transmission:
     container_name: transmission
-    image: lscr.io/linuxserver/transmission:latest
+    image: linuxserver/transmission
     environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK_SET=022
-      - TZ=Europe/Stockholm
+      PUID: 1000
+      PGID: 1000
+      UMASK_SET: 022
+      TZ: Europe/Stockholm
     volumes:
-      - "~/config/transmission:/config"
-      - "~/data/downloads/torrents:/downloads"
+      - ~/config/transmission:/config/transmission/
+      - ~/data/downloads/torrents:/downloads
     ports:
       - 9091:9091
       - 51413:51413
       - 51413:51413/udp
     restart: unless-stopped
-  flemmarr:
-    container_name: flemmarr
-    image: pierremesure/flemmarr:latest
-    # build: ./
-    volumes:
-      - "./config/flemmarr:/config"

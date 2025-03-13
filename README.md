@@ -1,24 +1,32 @@
 # Flemmarr
 
-<img width="30%" src="logo.svg" alt="Flemmarr"></img>
+<img width="30%" src="docs/logo.svg" alt="Flemmarr"></img>
 
 > **flemmard (*noun or adj.*):** lazy, slacker, idler in French 🇫🇷
 (cf. [Wiktionary](https://en.wiktionary.org/wiki/flemmard))
 
-**Flemmarr** is a simple Python script that parses a configuration written in YAML and can apply it to any of the **-arr apps (Sonarr, Radarr, Lidarr, Readarr, Prowlarr)** using their API.
+**Flemmarr** is an automation tool designed to simplify configuring all your **-arr applications (Sonarr, Radarr, Lidarr, Readarr, and Prowlarr)** using YAML configuration files. It leverages each application's API to seamlessly apply configurations as code, ensuring repeatability, simplicity, and consistency across your setups.
+
+## Prerequisites
+
+Before using Flemmarr, ensure that you have:
+
+- **Docker** installed on your system.
+- Your preferred **-arr applications** running and reachable (e.g., Sonarr, Radarr, Lidarr, Readarr, Prowlarr).
+- **API keys** for each -arr application, retrievable from their web UI (`Settings > General`).
+- Basic familiarity with YAML (recommended but not essential).
 
 ## Installation
 
-The easiest way to use it is to run it using **Docker** alongside your other -arr applications.
+The simplest way is to run Flemmarr using Docker alongside your other -arr applications:
 
-```docker
+```bash
 docker run pierremesure/flemmarr:latest -v ./config/flemmarr:config
 ```
 
 You can also just add it to your **docker-compose.yml**
 
 ```yaml
-version: "3"
 services:
   flemmarr:
     container_name: flemmarr
@@ -59,30 +67,22 @@ lidarr:
 
 Check out the example [config.yml](config/flemmarr/config.yml) with more settings for various apps.
 
-**NB:** Unfortunately, I found the APIs for all -arr tools to be of poor quality. Oftentimes, some fields are needed for no reason, default values are not the same as the ones applied by the GUI.
+**Note:** The APIs for all -arr tools can be inconsistent. Sometimes, fields are required without clear reasons, and default values may differ from those applied by the GUI.
 
-If you cannot find how to change a specific part of the configuration in this file, you will have to find out by yourself how it should look like. You can for instance:
+If you cannot find how to change a specific part of the configuration in this file, you will have to find out by yourself how it should look. You can:
 
-- browse the API docs of the app ([Sonarr](https://github.com/Sonarr/Sonarr/wiki/API), [Radarr](https://radarr.video/docs/api/), [Lidarr](https://lidarr.audio/docs/api/), [Readarr](https://readarr.com/docs/api/), [Prowlarr](http://prowlarr.com/docs/api/))
-- use your browser inspector to identify which call is sent by the GUI
-- use a REST client such as [Insomnia](https://insomnia.rest) to tinker your payload and see exactly which values work and don't
-- ask for help here by creating an issue.
+- Browse the API docs of the app ([Sonarr](https://sonarr.tv/docs/api/), [Radarr](https://radarr.video/docs/api/), [Lidarr](https://lidarr.audio/docs/api/), [Readarr](https://readarr.com/docs/api/), [Prowlarr](http://prowlarr.com/docs/api/))
+- Use your browser inspector to identify which call is sent by the GUI
+- Use a REST client such as [Insomnia](https://insomnia.rest) to tinker with your payload and see exactly which values work and don't
+- Ask for help by creating an issue.
 
 Once you've found the solution, please add it to the example config file so others can benefit from your knowledge.
 
 ## Contributing
 
-I created Flemmarr because I was shocked when I couldn't find a way to write configuration as code for any of the -arr applications. I hope it is useful to more.
+I created Flemmarr because I was surprised that there wasn't a way to write configuration as code for any of the -arr applications. I hope it is useful to more people.
 
-I do not actually use any of the -arr apps in my daily life, I was just helping a friend to install them. So I don't plan on spending too much time on maintaining or improving the project. Feel free to submit your issues and your suggestions though! And feel free to have a look at the (very simple) code and documentation and try to make them better.
-
-### Some ideas I have
-
-- [ ] document more of the configuration's possible values, required fields
-- [ ] make the service idempotent (not easy considering how the APIs are designed)
-- [ ] make it possible to declare a common config for several apps to avoid redundancy in the file (maybe with group configs)
-- [ ] add automated testing
-- [ ] repackage the Python script as an Ansible package (if there is demand)
+I do not actually use any of the -arr apps in my daily life; I was just helping a friend to install them. So I don't plan on spending too much time on maintaining or improving the project. Feel free to submit your issues and suggestions! And feel free to look at the (very simple) code and documentation and try to make them better.
 
 ## Credits
 
