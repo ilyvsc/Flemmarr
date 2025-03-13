@@ -1,7 +1,28 @@
-import yaml
+import os
+from typing import Optional
 
-from flemmarr import manager
-from flemmarr.config import CONFIG_PATH
+import yaml
+from dotenv import load_dotenv
+from manager import APIManager
+
+load_dotenv()
+
+
+def get_env_variable(key: str, default=None, raise_error: bool = True) -> Optional[str]:
+    """Get the environment variable or return exception."""
+    try:
+        value = os.environ[key]
+    except KeyError:
+        if default is not None:
+            value = default
+        else:
+            if raise_error:
+                raise ValueError(f"Environment variable {key} is not set.")
+            return None
+    return value
+
+
+CONFIG_PATH = get_env_variable(key="CONFIG_PATH", default="/config/flemmarr/config.yaml")
 
 
 def load_configs(config_path):
@@ -20,11 +41,16 @@ def load_configs(config_path):
 def main():
     configs = load_configs(CONFIG_PATH)
 
+    print(configs)
+
     for key, config in configs.items():
+        if key.startswith("alias_"):
+            continue
+
         server = config.pop("server")
         address, port = server["address"], server["port"]
 
-        api_manager = manager.APIManager(address, port)
+        api_manager = APIManager(address, port)
 
         print(f"Trying to connect to {key} at {address}:{port}")
         try:

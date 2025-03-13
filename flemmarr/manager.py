@@ -80,7 +80,6 @@ class APIManager:
             response.raise_for_status()
 
         data = response.json()
-        print(data)
         self.path = data["apiRoot"]
         self.session.headers.update({"X-Api-Key": data["apiKey"]})
 
